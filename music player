@@ -1,0 +1,87 @@
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+class Song {
+    private String title;
+    private String artist;
+
+    public Song(String title, String artist) {
+        this.title = title;
+        this.artist = artist;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getArtist() {
+        return artist;
+    }
+
+    @Override
+    public String toString() {
+        return title + " by " + artist;
+    }
+}
+
+class Playlist {
+    private List<Song> songs;
+
+    public Playlist() {
+        songs = new ArrayList<>();
+    }
+
+    public void addSong(Song song) {
+        songs.add(song);
+    }
+
+    public void displayPlaylist() {
+        System.out.println("Playlist:");
+        for (int i = 0; i < songs.size(); i++) {
+            System.out.println((i + 1) + ". " + songs.get(i));
+        }
+    }
+}
+
+public class MusicPlayer {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        Playlist playlist = new Playlist();
+
+        while (true) {
+            System.out.println("1. Add Song");
+            System.out.println("2. Display Playlist");
+            System.out.println("3. Exit");
+            System.out.print("Enter your choice: ");
+
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // Consume the newline character
+
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter the title of the song: ");
+                    String title = scanner.nextLine();
+                    System.out.print("Enter the artist of the song: ");
+                    String artist = scanner.nextLine();
+                    Song song = new Song(title, artist);
+                    playlist.addSong(song);
+                    System.out.println("Song added to the playlist.\n");
+                    break;
+
+                case 2:
+                    playlist.displayPlaylist();
+                    System.out.println();
+                    break;
+
+                case 3:
+                    System.out.println("Exiting the music player. Goodbye!");
+                    System.exit(0);
+
+                default:
+                    System.out.println("Invalid choice. Please enter a valid option.\n");
+            }
+        }
+    }
+}
