@@ -1,0 +1,102 @@
+import java.util.*;
+
+class Graph {
+    private Map<String, Map<String, Integer>> adjacencyList;
+
+    public Graph() {
+        adjacencyList = new HashMap<>();
+    }
+
+    public void addVertex(String vertex) {
+        adjacencyList.put(vertex, new HashMap<>());
+    }
+
+    public void addEdge(String source, String destination, int weight) {
+        adjacencyList.get(source).put(destination, weight);
+        adjacencyList.get(destination).put(source, weight); // Assuming an undirected graph
+    }
+
+    public List<String> dijkstra(String start, String end) {
+        Map<String, Integer> distance = new HashMap<>();
+        Map<String, String> previous = new HashMap<>();
+        Set<String> visited = new HashSet<>();
+
+        PriorityQueue<String> priorityQueue = new PriorityQueue<>(Comparator.comparingInt(distance::get));
+
+        for (String vertex : adjacencyList.keySet()) {
+            if (vertex.equals(start)) {
+                distance.put(vertex, 0);
+            } else {
+                distance.put(vertex, Integer.MAX_VALUE);
+            }
+            priorityQueue.add(vertex);
+        }
+
+        while (!priorityQueue.isEmpty()) {
+            String currentVertex = priorityQueue.poll();
+            visited.add(currentVertex);
+
+            for (String neighbor : adjacencyList.get(currentVertex).keySet()) {
+                int newDistance = distance.get(currentVertex) + adjacencyList.get(currentVertex).get(neighbor);
+
+                if (newDistance < distance.get(neighbor)) {
+                    distance.put(neighbor, newDistance);
+                    previous.put(neighbor, currentVertex);
+                    priorityQueue.remove(neighbor);
+                    priorityQueue.add(neighbor);
+                }
+            }
+        }
+
+        return reconstructPath(previous, start, end);
+    }
+
+    private List<String> reconstructPath(Map<String, String> previous, String start, String end) {
+        List<String> path = new ArrayList<>();
+        String current = end;
+
+        while (current != null) {
+            path.add(current);
+            current = previous.get(current);
+        }
+
+        Collections.reverse(path);
+
+        if (!path.get(0).equals(start)) {
+            // No path found
+            path.clear();
+        }
+
+        return path;
+    }
+}
+
+public class RoutePlanningApp {
+    public static void main(String[] args) {
+        Graph graph = new Graph();
+
+        // Example: Adding vertices and edges
+        graph.addVertex("A");
+        graph.addVertex("B");
+        graph.addVertex("C");
+        graph.addVertex("D");
+
+        graph.addEdge("A", "B", 1);
+        graph.addEdge("A", "C", 5);
+        graph.addEdge("B", "C", 2);
+        graph.addEdge("B", "D", 7);
+        graph.addEdge("C", "D", 1);
+
+        // Example: Finding the shortest path
+        String start = "A";
+        String end = "D";
+        List<String> shortestPath = graph.dijkstra(start, end);
+
+        if (shortestPath.isEmpty()) {
+            System.out.println("No path found from " + start + " to " + end);
+        } else {
+            System.out.println("Shortest path from " + start + " to " + end + ": " + shortestPath);
+        }
+    }
+}
+
