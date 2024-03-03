@@ -1,0 +1,57 @@
+class Song:
+    def __init__(self, title, artist, duration):
+        self.title = title
+        self.artist = artist
+        self.duration = duration
+
+    def __str__(self):
+        return f"{self.title} by {self.artist} ({self.duration} seconds)"
+
+
+class Playlist:
+    def __init__(self):
+        self.songs = []
+
+    def add_song(self, song):
+        self.songs.append(song)
+
+    def remove_song(self, song):
+        self.songs.remove(song)
+
+    def total_duration(self):
+        return sum(song.duration for song in self.songs)
+
+    def display_playlist(self):
+        for index, song in enumerate(self.songs, start=1):
+            print(f"{index}. {song}")
+
+    def play(self):
+        print("Playing songs from playlist:")
+        for song in self.songs:
+            print(f"Now playing: {song}")
+            # You could add functionality to actually play the song here
+
+
+# Example usage
+song1 = Song("Shape of You", "Ed Sheeran", 240)
+song2 = Song("Halo", "Beyoncé", 200)
+song3 = Song("Someone Like You", "Adele", 300)
+
+playlist = Playlist()
+playlist.add_song(song1)
+playlist.add_song(song2)
+playlist.add_song(song3)
+
+print("Total duration of playlist:", playlist.total_duration(), "seconds")
+playlist.display_playlist()
+
+playlist.play()
+OUTPUT:
+Total duration of playlist: 740 seconds
+1. Shape of You by Ed Sheeran (240 seconds)
+2. Halo by Beyoncé (200 seconds)
+3. Someone Like You by Adele (300 seconds)
+Playing songs from playlist:
+Now playing: Shape of You by Ed Sheeran (240 seconds)
+Now playing: Halo by Beyoncé (200 seconds)
+Now playing: Someone Like You by Adele (300 seconds)
